@@ -3,9 +3,15 @@ from .serializers import AnnouncementSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from .permissions import IsOwnerOrReadOnly
 
 
 class AnnouncementList(APIView):
+    """
+    List all Announcements, or create a new Announcement.
+    """
+    permission_classes = [IsOwnerOrReadOnly]
+
     def get(self, request, format=None):
         announcements = Announcement.objects.all()
         serializer = AnnouncementSerializer(announcements, many=True)
@@ -23,6 +29,11 @@ class AnnouncementList(APIView):
 
 
 class AnnouncementsDetail(APIView):
+    """
+    Retrieve, update or delete a Announcement instance.
+    """
+    permission_classes = [IsOwnerOrReadOnly]
+
     def get_object(self, pk):
         try:
             return Announcement.objects.get(id=pk)
