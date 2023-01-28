@@ -1,31 +1,20 @@
 from .models import Announcement
 from .serializers import AnnouncementSerializer
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, filters, generics
 from rest_framework.views import APIView
 from .permissions import IsOwnerOrReadOnly
 
 
-class AnnouncementList(APIView):
+class AnnouncementListAPIView(generics.ListCreateAPIView):
     """
     List all Announcements, or create a new Announcement.
     """
     permission_classes = [IsOwnerOrReadOnly]
-
-    def get(self, request, format=None):
-        announcements = Announcement.objects.all()
-        serializer = AnnouncementSerializer(announcements, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        data = request.data
-        serializer = AnnouncementSerializer(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    search_fields = ['title', 'description']
+    filter_backends = (filters.SearchFilter,)
+    queryset = Announcement.objects.all()
+    serializer_class = AnnouncementSerializer
 
 
 class AnnouncementsDetail(APIView):
