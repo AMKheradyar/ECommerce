@@ -13,7 +13,7 @@ class AnnouncementListAPIView(generics.ListCreateAPIView):
     permission_classes = [IsOwnerOrReadOnly]
     search_fields = ['title', 'description']
     filter_backends = (filters.SearchFilter,)
-    queryset = Announcement.objects.all()
+    queryset = Announcement.objects.filter(status='A')
     serializer_class = AnnouncementSerializer
 
 
