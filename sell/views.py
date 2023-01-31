@@ -31,6 +31,9 @@ class AnnouncementsDetail(APIView):
 
     def get(self, request, pk, format=None):
         serializer = AnnouncementSerializer(self.get_object(pk))
+        obj = self.get_object(pk)
+        obj.view_count = obj.view_count + 1
+        obj.save()
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):

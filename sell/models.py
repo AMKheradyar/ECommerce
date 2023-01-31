@@ -16,6 +16,7 @@ class Announcement(models.Model):
     description = models.TextField()
     price = models.FloatField()
     is_active = models.BooleanField(default=True)
+    view_count = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.title} ({self.id})"
